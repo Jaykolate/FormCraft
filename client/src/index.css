@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream-base: #FDFCF9;
+  --color-cream-surface: #F7F4EF;
+  --color-cream-border: #E8E2D9;
+  --color-cream-muted: #9C8F82;
+  --color-cream-text: #3D3530;
+  --color-cream-accent: #C4A882;
+  --color-cream-accent-hover: #B09470;
+  --color-cream-danger: #D97B6C;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  @apply bg-cream-base text-cream-text font-sans antialiased selection:bg-cream-accent/25 selection:text-cream-text;
+}
+
+/* Custom premium scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDFCF9; /* cream-base */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E8E2D9; /* cream-border */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C4A882; /* cream-accent */
+}
+
+/* Toast entrance slide-in animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
