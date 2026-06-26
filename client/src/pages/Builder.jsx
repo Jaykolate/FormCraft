@@ -423,8 +423,33 @@ export default function Builder() {
             {/* Form Title Card */}
             <div className="bg-cream-surface border border-cream-border p-8 rounded-2xl relative overflow-hidden shrink-0">
               <div className="absolute top-0 left-0 w-full h-[3px] bg-cream-accent" />
-              <h2 className="text-xl font-serif font-semibold text-cream-text">{title}</h2>
-              {description && <p className="text-sm text-cream-muted mt-2 leading-relaxed">{description}</p>}
+              {previewMode ? (
+                <>
+                  <h2 className="text-xl font-serif font-semibold text-cream-text">{title}</h2>
+                  {description && <p className="text-sm text-cream-muted mt-2 leading-relaxed">{description}</p>}
+                </>
+              ) : (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full bg-transparent border-b border-dashed border-cream-border/60 hover:border-cream-accent focus:border-cream-accent focus:outline-none font-serif font-semibold text-xl text-cream-text transition-all py-1"
+                    placeholder="Form Title"
+                  />
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full bg-transparent border-b border-dashed border-cream-border/60 hover:border-cream-accent focus:border-cream-accent focus:outline-none text-sm text-cream-muted transition-all py-1 resize-none min-h-[40px]"
+                    placeholder="Form Description (Describe your form here...)"
+                    rows={1}
+                    onInput={(e) => {
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Form Canvas Editor OR Interactive End-user Preview */}
