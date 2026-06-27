@@ -8,6 +8,8 @@ import PublicForm from './pages/PublicForm';
 import NotFound from './pages/NotFound';
 import { ToastProvider } from './context/ToastContext';
 
+import LandingPage from './pages/LandingPage';
+
 // Protected Route Wrapper to auto-redirect unauthenticated users to Sign In
 const ProtectedRoute = ({ children }) => {
   return (
@@ -25,8 +27,11 @@ export default function App() {
     <ToastProvider>
       <BrowserRouter>
         <Routes>
+          {/* Landing page */}
+          <Route path="/" element={<LandingPage />} />
+
           {/* Guarded routes for creators */}
-          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/builder/new" element={<ProtectedRoute><Builder /></ProtectedRoute>} />
           <Route path="/builder/:id" element={<ProtectedRoute><Builder /></ProtectedRoute>} />
           <Route path="/analytics/:id" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
@@ -39,7 +44,7 @@ export default function App() {
             path="/sign-in" 
             element={
               <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
-                <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" fallbackRedirectUrl="/" />
+                <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" fallbackRedirectUrl="/dashboard" />
               </div>
             } 
           />
@@ -47,7 +52,7 @@ export default function App() {
             path="/sign-up" 
             element={
               <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
-                <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" fallbackRedirectUrl="/" />
+                <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" fallbackRedirectUrl="/dashboard" />
               </div>
             } 
           />

@@ -186,7 +186,7 @@ export default function Analytics() {
             <p className="text-sm text-cream-muted mt-2 leading-relaxed">{error || 'An unexpected error occurred.'}</p>
           </div>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             className="px-6 py-2.5 bg-cream-accent hover:bg-cream-accent-hover border border-cream-accent text-xs font-semibold rounded-lg transition-colors text-cream-base hover:text-cream-base"
           >
             Back to Dashboard
@@ -209,7 +209,7 @@ export default function Analytics() {
       <header className="border-b border-cream-border bg-cream-surface px-4 py-3 flex items-center justify-between sticky top-0 z-10 gap-2">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             className="p-2 hover:bg-cream-surface border border-cream-border hover:border-cream-accent rounded-lg transition-colors text-cream-muted hover:text-cream-text shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />

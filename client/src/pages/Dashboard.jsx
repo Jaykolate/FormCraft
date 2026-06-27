@@ -101,7 +101,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-cream-base text-cream-text font-sans relative">
       {/* Main Header Nav */}
       <header className="border-b border-cream-border bg-cream-surface sticky top-0 z-20 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
           <div className="p-2 bg-cream-accent rounded-lg text-cream-base shadow-sm">
             <Layers className="w-5 h-5" />
           </div>

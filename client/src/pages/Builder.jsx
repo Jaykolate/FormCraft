@@ -101,7 +101,7 @@ export default function Builder() {
         } catch (err) {
           console.error('Error fetching form details:', err);
           showToast('error', 'Failed to load form details.');
-          navigate('/');
+          navigate('/dashboard');
         } finally {
           setFetching(false);
         }
@@ -223,7 +223,7 @@ export default function Builder() {
       }
 
       showToast('success', 'Form saved successfully!');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       console.error('Error saving form:', err);
       showToast('error', 'Failed to save form. Please try again.');
@@ -317,7 +317,7 @@ export default function Builder() {
           </button>
           <button 
             type="button"
-            onClick={() => navigate('/')} 
+            onClick={() => navigate('/dashboard')} 
             className="p-2 hover:bg-cream-surface border border-cream-border hover:border-cream-accent rounded-lg transition-colors text-cream-muted hover:text-cream-text shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
