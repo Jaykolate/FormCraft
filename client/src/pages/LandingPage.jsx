@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUser, UserButton } from '@clerk/clerk-react';
-import { Layers, ArrowRight, X, Sparkles, Layout, Zap, CheckCircle2, BarChart3, ChevronRight } from 'lucide-react';
+import { Layers, ArrowRight, X, Sparkles, Layout, Zap, CheckCircle2, BarChart3, ChevronRight, Menu } from 'lucide-react';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const { isSignedIn } = useUser();
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans flex flex-col justify-between relative selection:bg-zinc-900 selection:text-white">
       {/* Header Navigation */}
-      <header className="sticky top-0 z-40 w-full border-b border-zinc-200/80 bg-white/80 backdrop-blur-md px-6 py-4 flex items-center justify-between transition-all">
+      <header className="sticky top-0 z-40 w-full border-b border-zinc-200/80 bg-white/90 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between transition-all">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="p-2 bg-zinc-900 text-white rounded-xl shadow-xs transition-transform group-hover:scale-105">
-            <Layers className="w-5 h-5" />
+            <Layers className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
           </div>
           <div>
-            <span className="text-lg font-serif font-bold text-zinc-900 tracking-tight block leading-none">
+            <span className="text-base sm:text-lg font-serif font-bold text-zinc-900 tracking-tight block leading-none">
               FormCraft
             </span>
             <span className="text-[9px] block text-zinc-500 font-mono tracking-wider uppercase leading-none mt-1">
@@ -27,8 +28,8 @@ export default function LandingPage() {
           </div>
         </Link>
 
-        {/* Right Nav Controls */}
-        <div className="flex items-center gap-6 text-xs font-medium">
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center gap-6 text-xs font-medium">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
@@ -76,18 +77,92 @@ export default function LandingPage() {
             </div>
           )}
         </div>
+
+        {/* Mobile Menu Button */}
+        <div className="flex md:hidden items-center gap-2">
+          {isSignedIn && (
+            <UserButton afterSignOutUrl="/" appearance={{
+              elements: {
+                avatarBox: "h-8 w-8 border border-zinc-200 rounded-full"
+              }
+            }} />
+          )}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-zinc-700 hover:text-zinc-900 rounded-lg hover:bg-zinc-100 transition-colors"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </header>
 
+      {/* Mobile Dropdown Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-x-0 top-[61px] bg-white border-b border-zinc-200 p-6 shadow-xl z-30 animate-fade-in flex flex-col gap-4 text-sm font-medium">
+          <button 
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setMobileMenuOpen(false);
+            }}
+            className="text-left py-2 text-zinc-800 hover:text-zinc-900 font-semibold border-b border-zinc-100"
+          >
+            Home
+          </button>
+          <button 
+            onClick={() => {
+              setShowAboutModal(true);
+              setMobileMenuOpen(false);
+            }}
+            className="text-left py-2 text-zinc-800 hover:text-zinc-900 font-semibold border-b border-zinc-100"
+          >
+            About FormCraft
+          </button>
+
+          <div className="pt-2 flex flex-col gap-3">
+            {isSignedIn ? (
+              <button 
+                onClick={() => {
+                  navigate('/dashboard');
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-3 bg-zinc-900 text-white rounded-full text-xs font-semibold text-center flex items-center justify-center gap-2"
+              >
+                <span>Go to Workspace</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <>
+                <Link 
+                  to="/sign-up" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-3 bg-zinc-900 text-white rounded-full text-xs font-semibold text-center"
+                >
+                  Sign Up Free
+                </Link>
+                <Link 
+                  to="/sign-in" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-3 bg-white border border-zinc-300 text-zinc-800 rounded-full text-xs font-semibold text-center"
+                >
+                  Log In
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
-      <main className="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pt-20 md:pb-24 flex flex-col items-center text-center flex-1 justify-center relative z-10">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-12 sm:pt-16 sm:pb-20 flex flex-col items-center text-center flex-1 justify-center relative z-10">
         {/* Subtle Pill Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200/80 text-zinc-700 text-xs font-medium mb-6 shadow-2xs animate-fade-in">
+        <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200/80 text-zinc-700 text-[11px] sm:text-xs font-medium mb-5 sm:mb-6 shadow-2xs animate-fade-in">
           <Sparkles className="w-3.5 h-3.5 text-zinc-900" />
           <span>Next-Gen No-Code Form Builder</span>
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-4xl md:text-6xl font-serif font-bold tracking-tight text-zinc-900 max-w-3xl leading-[1.2]">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold tracking-tight text-zinc-900 max-w-3xl leading-[1.2]">
           Your ideas, documents, & plans. Unified in{' '}
           <span className="underline underline-offset-8 decoration-2 inline-block">
             FormCraft
@@ -95,16 +170,16 @@ export default function LandingPage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-6 text-sm md:text-base text-zinc-600 max-w-lg font-sans leading-relaxed">
+        <p className="mt-4 sm:mt-6 text-xs sm:text-sm md:text-base text-zinc-600 max-w-lg font-sans leading-relaxed px-2">
           FormCraft is connected workspace where better, faster work happens. Build, deploy, and analyze forms effortlessly.
         </p>
 
-        {/* Primary CTA Button */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+        {/* Primary CTA Buttons */}
+        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4">
           {isSignedIn ? (
             <button 
               onClick={() => navigate('/dashboard')}
-              className="px-7 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-full text-xs font-semibold transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto px-7 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-full text-xs font-semibold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
             >
               <span>Explore Workspace</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -112,7 +187,7 @@ export default function LandingPage() {
           ) : (
             <Link 
               to="/sign-up"
-              className="px-7 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-full text-xs font-semibold transition-all shadow-sm flex items-center gap-2 active:scale-95 inline-flex"
+              className="w-full sm:w-auto px-7 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-full text-xs font-semibold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95 inline-flex"
             >
               <span>Get FormCraft Free</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -120,7 +195,7 @@ export default function LandingPage() {
           )}
           <button 
             onClick={() => setShowAboutModal(true)}
-            className="px-5 py-3 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+            className="w-full sm:w-auto px-5 py-3 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5"
           >
             <span>Learn More</span>
             <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -128,7 +203,7 @@ export default function LandingPage() {
         </div>
 
         {/* Hero Line-Art Illustration */}
-        <div className="mt-10 w-full max-w-2xl relative">
+        <div className="mt-8 sm:mt-12 w-full max-w-2xl relative px-2">
           <svg 
             viewBox="0 0 800 380" 
             className="w-full h-auto"
@@ -186,32 +261,32 @@ export default function LandingPage() {
         </div>
 
         {/* Feature Cards Grid */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
-          <div className="p-6 bg-white border border-zinc-200 rounded-2xl shadow-2xs hover:border-zinc-400 transition-all group">
-            <div className="p-2.5 bg-zinc-100 text-zinc-900 rounded-xl w-fit mb-4 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full text-left">
+          <div className="p-5 sm:p-6 bg-white border border-zinc-200 rounded-2xl shadow-2xs hover:border-zinc-400 transition-all group">
+            <div className="p-2.5 bg-zinc-100 text-zinc-900 rounded-xl w-fit mb-3.5 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
               <Layout className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-serif font-semibold text-zinc-900 mb-2">Drag & Drop Builder</h3>
+            <h3 className="text-sm sm:text-base font-serif font-semibold text-zinc-900 mb-1.5">Drag & Drop Builder</h3>
             <p className="text-xs text-zinc-600 leading-relaxed">
               Create form layouts with live preview editing, question ordering, and validation rules.
             </p>
           </div>
 
-          <div className="p-6 bg-white border border-zinc-200 rounded-2xl shadow-2xs hover:border-zinc-400 transition-all group">
-            <div className="p-2.5 bg-zinc-100 text-zinc-900 rounded-xl w-fit mb-4 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
+          <div className="p-5 sm:p-6 bg-white border border-zinc-200 rounded-2xl shadow-2xs hover:border-zinc-400 transition-all group">
+            <div className="p-2.5 bg-zinc-100 text-zinc-900 rounded-xl w-fit mb-3.5 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
               <Zap className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-serif font-semibold text-zinc-900 mb-2">Instant Share Links</h3>
+            <h3 className="text-sm sm:text-base font-serif font-semibold text-zinc-900 mb-1.5">Instant Share Links</h3>
             <p className="text-xs text-zinc-600 leading-relaxed">
               Deploy forms instantly and share unique public URLs to start collecting responses right away.
             </p>
           </div>
 
-          <div className="p-6 bg-white border border-zinc-200 rounded-2xl shadow-2xs hover:border-zinc-400 transition-all group">
-            <div className="p-2.5 bg-zinc-100 text-zinc-900 rounded-xl w-fit mb-4 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
+          <div className="p-5 sm:p-6 bg-white border border-zinc-200 rounded-2xl shadow-2xs hover:border-zinc-400 transition-all group">
+            <div className="p-2.5 bg-zinc-100 text-zinc-900 rounded-xl w-fit mb-3.5 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
               <BarChart3 className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-serif font-semibold text-zinc-900 mb-2">Real-Time Analytics</h3>
+            <h3 className="text-sm sm:text-base font-serif font-semibold text-zinc-900 mb-1.5">Real-Time Analytics</h3>
             <p className="text-xs text-zinc-600 leading-relaxed">
               Track conversion metrics, interactive charts, and export submission records to CSV format.
             </p>
@@ -220,7 +295,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 bg-zinc-50 px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-medium">
+      <footer className="border-t border-zinc-200 bg-zinc-50 px-6 sm:px-8 py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-medium">
         <div className="flex items-center gap-2">
           <div className="p-1.5 bg-zinc-900 rounded-lg text-white shadow-xs">
             <Layers className="w-3.5 h-3.5" />
