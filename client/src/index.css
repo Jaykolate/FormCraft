@@ -1,55 +1,49 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream-base: #FDFCF9;
-  --color-cream-surface: #F7F4EF;
-  --color-cream-border: #E8E2D9;
-  --color-cream-muted: #9C8F82;
-  --color-cream-text: #3D3530;
-  --color-cream-accent: #C4A882;
-  --color-cream-accent-hover: #B09470;
-  --color-cream-danger: #D97B6C;
+  --color-cream-base: #FFFFFF;
+  --color-cream-surface: #FAFAFA;
+  --color-cream-border: #E4E4E7;
+  --color-cream-muted: #71717A;
+  --color-cream-text: #09090B;
+  --color-cream-accent: #18181B;
+  --color-cream-accent-hover: #27272A;
+  --color-cream-danger: #EF4444;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 body {
-  @apply bg-cream-base text-cream-text font-sans antialiased selection:bg-cream-accent/25 selection:text-cream-text;
+  @apply bg-white text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white;
 }
 
-/* Custom premium scrollbars */
+/* Custom luxury scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #FDFCF9; /* cream-base */
+  background: #FFFFFF;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E8E2D9; /* cream-border */
+  background: #E4E4E7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C4A882; /* cream-accent */
+  background: #18181B;
 }
 
-/* Toast entrance slide-in animation */
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+/* Entrance animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-slide-in {
-  animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
