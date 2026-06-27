@@ -21,6 +21,12 @@ const SettingsSchema = new mongoose.Schema({
   thankYouMessage: { type: String, default: 'Thank you for your submission!' }
 }, { _id: false });
 
+const ThemeSchema = new mongoose.Schema({
+  color: { type: String, default: 'indigo' },
+  font: { type: String, default: 'sans' },
+  layout: { type: String, default: 'classic' }
+}, { _id: false });
+
 const FormSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
   ownerEmail: { type: String, default: null },
@@ -28,6 +34,7 @@ const FormSchema = new mongoose.Schema({
   description: { type: String, default: '' },
   fields: { type: [FieldSchema], default: [] },
   settings: { type: SettingsSchema, default: () => ({}) },
+  theme: { type: ThemeSchema, default: () => ({ color: 'indigo', font: 'sans', layout: 'classic' }) },
   slug: { 
     type: String, 
     unique: true, 

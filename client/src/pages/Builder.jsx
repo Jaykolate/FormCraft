@@ -25,7 +25,9 @@ import {
   Sparkles,
   Smile,
   X,
-  Menu
+  Menu,
+  Palette,
+  Check
 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -69,10 +71,18 @@ export default function Builder() {
   });
   const [ownerEmail, setOwnerEmail] = useState('');
 
+  // Theme & Customization State
+  const [theme, setTheme] = useState({
+    color: 'indigo',
+    font: 'sans',
+    layout: 'classic'
+  });
+
   // UI States
   const [selectedFieldId, setSelectedFieldId] = useState(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showThemeModal, setShowThemeModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEditMode);
   // Mobile navigation state
@@ -97,6 +107,11 @@ export default function Builder() {
             expiryDate: form.settings?.expiryDate ? new Date(form.settings.expiryDate).toISOString().split('T')[0] : '',
             maxResponses: form.settings?.maxResponses || '',
             thankYouMessage: form.settings?.thankYouMessage || 'Thank you for your submission!'
+          });
+          setTheme({
+            color: form.theme?.color || 'indigo',
+            font: form.theme?.font || 'sans',
+            layout: form.theme?.layout || 'classic'
           });
         } catch (err) {
           console.error('Error fetching form details:', err);
@@ -209,7 +224,8 @@ export default function Builder() {
           expiryDate: settings.expiryDate || null,
           maxResponses: settings.maxResponses ? parseInt(settings.maxResponses) : null,
           thankYouMessage: settings.thankYouMessage
-        }
+        },
+        theme
       };
 
       if (isEditMode) {
@@ -350,6 +366,16 @@ export default function Builder() {
           >
             {previewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             <span className="hidden md:inline ml-1.5">{previewMode ? "Exit Preview" : "Live Preview"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowThemeModal(true)}
+            className="flex items-center justify-center w-9 h-9 md:w-auto md:h-auto md:px-3.5 md:py-2 bg-cream-base hover:bg-cream-surface border border-cream-border text-cream-text rounded-lg text-xs font-semibold transition-colors"
+            title="Theme & Styling"
+          >
+            <Palette className="w-4 h-4 text-indigo-600" />
+            <span className="hidden md:inline ml-1.5">Theme & Brand</span>
           </button>
 
           <button
@@ -698,6 +724,114 @@ export default function Builder() {
               className="w-full mt-6 py-2.5 bg-cream-accent hover:bg-cream-accent-hover text-cream-base rounded-xl text-xs font-bold transition-all shadow-sm"
             >
               Apply Settings
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Theme Customizer Modal */}
+      {showThemeModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white border border-zinc-200 rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setShowThemeModal(false)}
+              className="absolute top-4 right-4 p-1.5 text-zinc-400 hover:text-zinc-700 rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-1">
+              <Palette className="w-5 h-5 text-indigo-600" />
+              Theme & Brand Customizer
+            </h3>
+            <p className="text-xs text-zinc-500 mb-6">Customize accent colors, typography, and layout styling for public respondents.</p>
+
+            <div className="space-y-6 text-xs">
+              {/* 1. Accent Color Swatches */}
+              <div>
+                <label className="block text-zinc-700 font-bold uppercase tracking-wider mb-3">Accent Color Theme</label>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                  {[
+                    { id: 'indigo', name: 'Indigo', bg: 'bg-indigo-600', border: 'border-indigo-600' },
+                    { id: 'emerald', name: 'Emerald', bg: 'bg-emerald-600', border: 'border-emerald-600' },
+                    { id: 'rose', name: 'Rose', bg: 'bg-rose-600', border: 'border-rose-600' },
+                    { id: 'amber', name: 'Amber', bg: 'bg-amber-600', border: 'border-amber-600' },
+                    { id: 'violet', name: 'Violet', bg: 'bg-violet-600', border: 'border-violet-600' },
+                    { id: 'obsidian', name: 'Obsidian', bg: 'bg-zinc-900', border: 'border-zinc-900' },
+                  ].map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setTheme(prev => ({ ...prev, color: c.id }))}
+                      className={`flex flex-col items-center p-2.5 rounded-xl border transition-all cursor-pointer ${
+                        theme.color === c.id ? `${c.border} bg-zinc-50 font-bold shadow-xs` : 'border-zinc-200 hover:border-zinc-300'
+                      }`}
+                    >
+                      <div className={`w-7 h-7 rounded-full ${c.bg} flex items-center justify-center text-white mb-1.5 shadow-xs`}>
+                        {theme.color === c.id && <Check className="w-3.5 h-3.5" />}
+                      </div>
+                      <span className="text-[11px] text-zinc-700">{c.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 2. Typography Selection */}
+              <div>
+                <label className="block text-zinc-700 font-bold uppercase tracking-wider mb-3">Form Typography</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { id: 'sans', label: 'Modern Sans', fontClass: 'font-sans' },
+                    { id: 'serif', label: 'Classic Serif', fontClass: 'font-serif' },
+                    { id: 'mono', label: 'Tech Mono', fontClass: 'font-mono' }
+                  ].map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => setTheme(prev => ({ ...prev, font: f.id }))}
+                      className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${f.fontClass} ${
+                        theme.font === f.id ? 'border-zinc-900 bg-zinc-900 text-white font-semibold shadow-xs' : 'border-zinc-200 hover:border-zinc-300 text-zinc-700'
+                      }`}
+                    >
+                      <span className="text-xs">{f.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 3. Card Layout Style */}
+              <div>
+                <label className="block text-zinc-700 font-bold uppercase tracking-wider mb-3">Public Card Layout</label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    { id: 'classic', title: 'Classic Minimal', desc: 'Clean white cards with subtle borders' },
+                    { id: 'modern', title: 'Soft Elevation', desc: 'Floating cards with soft ambient drop shadow' },
+                    { id: 'glass', title: 'Glassmorphism', desc: 'Translucent glass card on soft gradient bg' }
+                  ].map((l) => (
+                    <button
+                      key={l.id}
+                      type="button"
+                      onClick={() => setTheme(prev => ({ ...prev, layout: l.id }))}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                        theme.layout === l.id ? 'border-indigo-600 bg-indigo-50/50 shadow-xs' : 'border-zinc-200 hover:border-zinc-300 bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold text-zinc-900 text-xs">{l.title}</span>
+                        {theme.layout === l.id && <Check className="w-3.5 h-3.5 text-indigo-600" />}
+                      </div>
+                      <span className="text-[10px] text-zinc-500 leading-relaxed">{l.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowThemeModal(false)}
+              className="w-full mt-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
+            >
+              Apply Theme Customizations
             </button>
           </div>
         </div>

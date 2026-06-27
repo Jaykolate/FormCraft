@@ -338,21 +338,49 @@ export default function PublicForm() {
   }
 
   // 4. Render active Form
+  const themeColor = form?.theme?.color || 'indigo';
+  const themeFont = form?.theme?.font || 'sans';
+  const themeLayout = form?.theme?.layout || 'classic';
+
+  const colorMap = {
+    indigo: { bg: 'bg-indigo-600 hover:bg-indigo-700', text: 'text-indigo-600', fill: 'fill-indigo-600', border: 'border-indigo-600', bar: 'bg-indigo-600' },
+    emerald: { bg: 'bg-emerald-600 hover:bg-emerald-700', text: 'text-emerald-600', fill: 'fill-emerald-600', border: 'border-emerald-600', bar: 'bg-emerald-600' },
+    rose: { bg: 'bg-rose-600 hover:bg-rose-700', text: 'text-rose-600', fill: 'fill-rose-600', border: 'border-rose-600', bar: 'bg-rose-600' },
+    amber: { bg: 'bg-amber-600 hover:bg-amber-700', text: 'text-amber-600', fill: 'fill-amber-600', border: 'border-amber-600', bar: 'bg-amber-600' },
+    violet: { bg: 'bg-violet-600 hover:bg-violet-700', text: 'text-violet-600', fill: 'fill-violet-600', border: 'border-violet-600', bar: 'bg-violet-600' },
+    obsidian: { bg: 'bg-zinc-900 hover:bg-zinc-800', text: 'text-zinc-900', fill: 'fill-zinc-900', border: 'border-zinc-900', bar: 'bg-zinc-900' }
+  };
+
+  const fontMap = {
+    sans: 'font-sans',
+    serif: 'font-serif',
+    mono: 'font-mono'
+  };
+
+  const activeColor = colorMap[themeColor] || colorMap.indigo;
+  const activeFont = fontMap[themeFont] || 'font-sans';
+
+  const layoutContainerStyle = themeLayout === 'glass'
+    ? 'bg-white/80 border border-slate-200/80 shadow-2xl backdrop-blur-md'
+    : themeLayout === 'modern'
+    ? 'bg-white border border-slate-200/90 shadow-xl'
+    : 'bg-white border border-slate-200 shadow-sm';
+
   return (
-    <div className="min-h-screen bg-cream-base flex flex-col justify-between p-6 font-sans relative overflow-hidden">
-      {/* Decorative gradients */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-cream-accent/5 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-cream-accent/5 rounded-full blur-[150px] pointer-events-none" />
+    <div className={`min-h-screen bg-slate-50 flex flex-col justify-between p-4 sm:p-6 ${activeFont} relative overflow-hidden`}>
+      {/* Decorative background ambient glow */}
+      <div className={`absolute top-[-20%] left-[-10%] w-[60%] h-[60%] ${activeColor.bar} opacity-5 rounded-full blur-[150px] pointer-events-none`} />
+      <div className={`absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] ${activeColor.bar} opacity-5 rounded-full blur-[150px] pointer-events-none`} />
 
       {/* Main card container */}
-      <div className="my-auto w-full max-w-2xl mx-auto bg-cream-surface border border-cream-border p-8 md:p-10 rounded-3xl shadow-2xl backdrop-blur-sm space-y-8 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[3px] bg-cream-accent" />
+      <div className={`my-auto w-full max-w-2xl mx-auto ${layoutContainerStyle} p-6 sm:p-10 rounded-3xl space-y-8 relative overflow-hidden transition-all`}>
+        <div className={`absolute top-0 left-0 w-full h-[4px] ${activeColor.bar}`} />
 
         {/* Title area */}
         <div>
-          <h1 className="text-2xl font-extrabold text-cream-text tracking-tight">{form.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{form.title}</h1>
           {form.description && (
-            <p className="text-sm text-cream-muted mt-3 leading-relaxed border-t border-cream-border pt-3">
+            <p className="text-sm text-slate-600 mt-3 leading-relaxed border-t border-slate-200/80 pt-3">
               {form.description}
             </p>
           )}
@@ -360,7 +388,7 @@ export default function PublicForm() {
 
         {/* Error warning bar */}
         {submitError && (
-          <div className="p-4 bg-cream-danger/10 border border-cream-danger/20 text-cream-danger rounded-2xl flex items-center gap-3 text-xs font-semibold">
+          <div className="p-4 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl flex items-center gap-3 text-xs font-semibold">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <span>{submitError}</span>
           </div>
@@ -373,13 +401,13 @@ export default function PublicForm() {
               key={field.id}
               className={`p-5 rounded-2xl border transition-all ${
                 validationErrors.includes(field.id)
-                  ? 'bg-cream-danger/5 border-cream-danger'
-                  : 'bg-cream-surface/30 border-cream-border hover:border-cream-accent'
+                  ? 'bg-rose-50/50 border-rose-300'
+                  : 'bg-slate-50/50 border-slate-200/80 hover:border-slate-300'
               }`}
             >
-              <label className="block text-sm font-bold text-cream-text mb-2.5">
+              <label className="block text-sm font-bold text-slate-900 mb-2.5">
                 {field.label}
-                {field.required && <span className="text-cream-danger font-bold ml-1">*</span>}
+                {field.required && <span className="text-rose-500 font-bold ml-1">*</span>}
               </label>
               {renderFieldInput(field)}
             </div>
@@ -389,10 +417,10 @@ export default function PublicForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3.5 bg-cream-accent hover:bg-cream-accent/90 disabled:bg-cream-border/60 text-cream-base rounded-2xl text-sm font-bold transition-all shadow-lg shadow-cream-accent/10 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+            className={`w-full py-3.5 ${activeColor.bg} text-white rounded-2xl text-sm font-bold transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50`}
           >
             {submitting ? (
-              <div className="w-5 h-5 border-2 border-cream-base/30 border-t-cream-base rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
                 <Send className="w-4 h-4" />
@@ -408,8 +436,8 @@ export default function PublicForm() {
         onClick={() => window.open('/', '_self')}
         className="flex items-center justify-center gap-1.5 opacity-40 hover:opacity-80 transition-opacity pt-8 cursor-pointer shrink-0"
       >
-        <Layers className="w-4 h-4 text-cream-muted" />
-        <span className="text-[10px] font-bold tracking-wider uppercase text-cream-muted">
+        <Layers className="w-4 h-4 text-slate-400" />
+        <span className="text-[10px] font-bold tracking-wider uppercase text-slate-400">
           Built with FormCraft
         </span>
       </div>

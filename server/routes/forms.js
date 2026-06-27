@@ -8,7 +8,7 @@ const router = express.Router();
 // 1. POST /api/forms (Auth required)
 router.post('/', clerkAuth, async (req, res) => {
   try {
-    const { title, description, fields, settings } = req.body;
+    const { title, description, fields, settings, theme } = req.body;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -19,7 +19,8 @@ router.post('/', clerkAuth, async (req, res) => {
       title,
       description,
       fields,
-      settings
+      settings,
+      theme
     });
 
     await newForm.save();
@@ -50,6 +51,7 @@ router.get('/', clerkAuth, async (req, res) => {
           description: 1,
           fields: 1,
           settings: 1,
+          theme: 1,
           slug: 1,
           createdAt: 1,
           responseCount: { $size: '$responses' }
@@ -107,13 +109,14 @@ router.get('/:slug', async (req, res) => {
       }
     }
 
-    // Return sanitized form data (only fields and settings)
+    // Return sanitized form data (only fields, settings, and theme)
     return res.json({
       _id: form._id,
       title: form.title,
       description: form.description,
       fields: form.fields,
       settings: form.settings,
+      theme: form.theme,
       slug: form.slug,
       createdAt: form.createdAt
     });
@@ -126,7 +129,7 @@ router.get('/:slug', async (req, res) => {
 // 4. PUT /api/forms/:id (Auth required)
 router.put('/:id', clerkAuth, async (req, res) => {
   try {
-    const { title, description, fields, settings } = req.body;
+    const { title, description, fields, settings, theme } = req.body;
 
     const form = await Form.findById(req.params.id);
     if (!form) {
@@ -142,6 +145,7 @@ router.put('/:id', clerkAuth, async (req, res) => {
     if (description !== undefined) form.description = description;
     if (fields !== undefined) form.fields = fields;
     if (settings !== undefined) form.settings = { ...form.settings, ...settings };
+    if (theme !== undefined) form.theme = { ...form.theme, ...theme };
 
     await form.save();
     return res.json(form);
